@@ -1,36 +1,52 @@
-name: Build Android APK
+[app]
 
-on:
-  push:
-    branches: [ main, master ]
-  workflow_dispatch:
+# (str) Title of your application
+title = JarvisMobile
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+# (str) Package name
+package.name = jarvismobile
 
-    steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
+# (str) Package domain (needed for android/ios packaging)
+package.domain = org.test
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
+# (str) Source code where the main.py live
+source.dir = .
 
-    - name: Install Dependencies
-      run: |
-        sudo apt update
-        sudo apt install -y git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
-        pip install --upgrade pip
-        pip install "buildozer<1.6.0" "cython<3.0.0"
+# (list) Source files to include (let empty to include all the base dir)
+source.include_exts = py,png,jpg,kv,atlas
 
-    - name: Build APK with Buildozer
-      run: |
-        buildozer -s android debug
+# (str) Application versioning (method 1)
+version = 0.1
 
-    - name: Upload APK Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: JarvisMobile-APK
-        path: bin/*.apk
+# (list) Application requirements
+# Note: 'android' package nahi likhna, sirf python3 aur kivy
+requirements = python3,kivy==2.2.1
+
+# (str) Supported orientation (one of landscape, sensorLandscape, portrait or all)
+orientation = portrait
+
+# (bool) Indicate if the application should be fullscreen or not
+fullscreen = 0
+
+# (list) Permissions
+android.permissions = INTERNET
+
+# (int) Target Android API, should be as high as possible.
+android.api = 33
+
+# (int) Minimum API required
+android.minapi = 21
+
+# (str) Android NDK version
+android.ndk = 25b
+
+# (list) List of Android architectures to build for
+android.archs = arm64-v8a, armeabi-v7a
+
+[buildozer]
+
+# (int) Log level (0 = error only, 1 = info, 2 = debug (with command output))
+log_level = 2
+
+# (int) Display warning if buildozer is run as root (0 = false, 1 = true)
+warn_on_root = 1
